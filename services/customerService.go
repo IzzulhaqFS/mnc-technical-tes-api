@@ -18,6 +18,14 @@ func GetCustomerById(id int) (models.Customer, error) {
 	return customer, nil
 }
 
+func GetCustomerByEmail(email string) (models.Customer, error) {
+	customer := repositories.GetCustomerByEmail(email)
+	if (customer == models.Customer{}) {
+		return models.Customer{}, errors.New("customer not found")
+	}
+	return customer, nil
+}
+
 func UpdateCustomer(customer models.Customer) models.Customer {
 	return repositories.UpdateCustomer(customer)
 }

@@ -10,12 +10,7 @@ func GetTransactions() models.Transactions {
 	return repositories.GetTransactions()
 }
 
-func AddNewTransaction(senderId, receiverId, amount int) (models.Transaction, error) {
-	sender, err := GetCustomerById(senderId)
-	if err != nil {
-		return models.Transaction{}, errors.New("sender not found")
-	}
-
+func AddNewTransaction(sender models.Customer, receiverId, amount int) (models.Transaction, error) {
 	receiver, err := GetCustomerById(receiverId)
 	if err != nil {
 		return models.Transaction{}, errors.New("receiver not found")

@@ -1,1 +1,1 @@
-{"customers":[{"id":1,"email":"customer1@gmail.com","password":"password","name":"customer1","address":"address1","phone":"phone1","balance":980000},{"id":2,"email":"customer2@gmail.com","password":"password","name":"customer2","address":"address2","phone":"phone2","balance":2020000}]}
+{"customers":[{"id":1,"email":"customer1@gmail.com","password":"password","name":"customer1","address":"address1","phone":"phone1","balance":970000},{"id":2,"email":"customer2@gmail.com","password":"password","name":"customer2","address":"address2","phone":"phone2","balance":2030000}]}

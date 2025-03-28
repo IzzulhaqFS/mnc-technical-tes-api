@@ -32,6 +32,18 @@ func GetCustomerById(id int) models.Customer {
 	return models.Customer{}
 }
 
+func GetCustomerByEmail(email string) models.Customer {
+	customers := GetCustomers()
+
+	for _, customer := range customers.Customers {
+		if customer.Email == email {
+			return customer
+		}
+	}
+
+	return models.Customer{}
+}
+
 func UpdateCustomer(customer models.Customer) models.Customer {
 	customers := GetCustomers()
 

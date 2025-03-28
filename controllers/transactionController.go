@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"izzulhaqfs/mnc-tes-api/services"
+	"izzulhaqfs/mnc-tes-api/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,6 @@ import (
 )
 
 type validateInputTransaction struct {
-	SenderId int `json:"sender_id" binding:"required"`
 	ReceiverId int `json:"receiver_id" binding:"required"`
 	Amount int `json:"amount" binding:"required"`
 }
@@ -35,7 +35,7 @@ func CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	data, err := services.AddNewTransaction(input.SenderId, input.ReceiverId, input.Amount)
+	senderEmail, err := utils.ExtractEmailFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -44,7 +44,25 @@ func CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	services.AddNewHistory("Transaction", fmt.Sprintf("Sender ID: %d, Receiver ID: %d, Amount: %d", input.SenderId, input.ReceiverId, input.Amount))
+	sender, err := services.GetCustomerByEmail(senderEmail)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	data, err := services.AddNewTransaction(sender, input.ReceiverId, input.Amount)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	services.AddNewHistory("Transaction", fmt.Sprintf("Sender ID: %d, Receiver ID: %d, Amount: %d", sender.Id, input.ReceiverId, input.Amount))
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
