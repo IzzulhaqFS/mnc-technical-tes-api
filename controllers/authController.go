@@ -4,6 +4,7 @@ import (
 	"errors"
 	"izzulhaqfs/mnc-tes-api/models"
 	"izzulhaqfs/mnc-tes-api/services"
+	"izzulhaqfs/mnc-tes-api/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -50,11 +51,22 @@ func Login(c *gin.Context) {
 	var customers models.Customers = services.GetCustomers()
 	for _, customer := range customers.Customers {
 		if customer.Email == input.Email && customer.Password == input.Password {
+			token, err := utils.GenerateToken(customer.Email)
+
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"success": false,
+					"message": err.Error(),
+				})
+				return
+			}
+
 			services.AddNewHistory("Login", "Login Success. Email: " + input.Email)
 			c.JSON(http.StatusOK, gin.H{
 				"success": true,
 				"message": "Login Success",
 				"data": customer,
+				"token": token,
 			})
 			return
 		}

@@ -2,18 +2,31 @@ package main
 
 import (
 	"izzulhaqfs/mnc-tes-api/controllers"
+	"izzulhaqfs/mnc-tes-api/middlewares"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	godotenv.Load()
+
 	router := gin.Default()
 
-	router.POST("/login", controllers.Login)
+	auth := router.Group("/api/auth")
 
-	router.POST("/logout", controllers.Logout)
+	auth.POST("/login", controllers.Login)
 
-	router.POST("/transaction", controllers.CreateTransaction)
+	auth.POST("/logout", controllers.Logout)
+
+	protected := router.Group("/api/protected")
+	protected.Use(middlewares.JwtAuthMiddleware())
+
+	protected.POST("/transaction", controllers.CreateTransaction)
+	// protected.GET("/transaction", controllers.GetTransactions)
+
+	// protected.GET("/history", controllers.GetHistories)
+
 
 	router.Run(":8080")
 }
