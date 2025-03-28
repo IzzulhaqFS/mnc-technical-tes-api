@@ -1,32 +1,39 @@
 package services
 
 import (
+	"errors"
 	"izzulhaqfs/mnc-tes-api/models"
-	"log"
-	"os"
-	"encoding/json"
+	"izzulhaqfs/mnc-tes-api/repositories"
 )
 
 func GetTransactions() models.Transactions {
-	var transactions models.Transactions
-
-	jsonFile, err := os.ReadFile("data/transactions.json")
-	if err != nil {
-		log.Fatalf("error when opening file: %v", err)
-	}
-
-	json.Unmarshal(jsonFile, &transactions)
-
-	return transactions
+	return repositories.GetTransactions()
 }
 
-func AddNewTransaction(transaction models.Transaction) models.Transaction {
-	transactions := GetTransactions()
+func AddNewTransaction(senderId, receiverId, amount int) (models.Transaction, error) {
+	sender, err := GetCustomerById(senderId)
+	if err != nil {
+		return models.Transaction{}, errors.New("sender not found")
+	}
 
-	transaction.Id = len(transactions.Transactions) + 1
+	receiver, err := GetCustomerById(receiverId)
+	if err != nil {
+		return models.Transaction{}, errors.New("receiver not found")
+	}
 
-	transactions.Transactions = append(transactions.Transactions, transaction)
-	data, _ := json.Marshal(transactions)
-	os.WriteFile("data/transactions.json", data, 0644)
-	return transaction
+	if sender.Balance < amount {
+		return models.Transaction{}, errors.New("insufficient balance")
+	}
+
+	sender.Balance -= amount
+	UpdateCustomer(sender)
+
+	receiver.Balance += amount
+	UpdateCustomer(receiver)
+
+	return repositories.AddNewTransaction(models.Transaction{
+		Sender:   sender,
+		Receiver: receiver,
+		Amount:     amount,
+	}), nil
 }

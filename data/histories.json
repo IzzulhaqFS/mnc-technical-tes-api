@@ -1,0 +1,1 @@
+{"histories":[{"id":1,"action":"Login","detail":"Login Success. Email: customer1@gmail.com"},{"id":2,"action":"Transaction","detail":"Sender ID: 1, Receiver ID: 2, Amount: 10000"},{"id":3,"action":"Logout","detail":"Logout Success."}]}

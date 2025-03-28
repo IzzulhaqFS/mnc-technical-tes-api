@@ -6,7 +6,7 @@ type Transactions struct {
 
 type Transaction struct {
 	Id int `json:"id"`
-	SenderId int `json:"sender_id"`
-	ReceiverId int `json:"receiver_id"`
+	Sender Customer `json:"sender"`
+	Receiver Customer `json:"receiver"`
 	Amount int `json:"amount"`
 }

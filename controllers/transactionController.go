@@ -3,7 +3,6 @@ package controllers
 import (
 	"errors"
 	"fmt"
-	"izzulhaqfs/mnc-tes-api/models"
 	"izzulhaqfs/mnc-tes-api/services"
 	"net/http"
 
@@ -29,19 +28,23 @@ func CreateTransaction(c *gin.Context) {
 					Message: GetErrorMsg(fe),
 				}
 				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+					"success": false,
 					"error": out,})
 			}
 		}
 		return
 	}
 
-	var transaction models.Transaction = models.Transaction{
-		SenderId: input.SenderId,
-		ReceiverId: input.ReceiverId,
-		Amount: input.Amount,
+	data, err := services.AddNewTransaction(input.SenderId, input.ReceiverId, input.Amount)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
 	}
-	data := services.AddNewTransaction(transaction)
-	services.LogActivity("Transaction", fmt.Sprintf("Sender ID: %d, Receiver ID: %d, Amount: %d", input.SenderId, input.ReceiverId, input.Amount))
+
+	services.AddNewHistory("Transaction", fmt.Sprintf("Sender ID: %d, Receiver ID: %d, Amount: %d", input.SenderId, input.ReceiverId, input.Amount))
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,

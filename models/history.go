@@ -1,10 +1,10 @@
 package models
 
-type LogActivities struct {
-	LogActivities []LogActivity `json:"history"`
+type Histories struct {
+	LogActivities []History `json:"histories"`
 }
 
-type LogActivity struct {
+type History struct {
 	Id int `json:"id"`
 	Action string `json:"action"`
 	Detail string `json:"detail"`

@@ -40,6 +40,7 @@ func Login(c *gin.Context) {
 					Message: GetErrorMsg(fe),
 				}
 				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+					"success": false,
 					"error": out,})
 			}
 		}
@@ -49,22 +50,26 @@ func Login(c *gin.Context) {
 	var customers models.Customers = services.GetCustomers()
 	for _, customer := range customers.Customers {
 		if customer.Email == input.Email && customer.Password == input.Password {
-			services.LogActivity("Login", "Login Success. Email: " + input.Email)
+			services.AddNewHistory("Login", "Login Success. Email: " + input.Email)
 			c.JSON(http.StatusOK, gin.H{
+				"success": true,
 				"message": "Login Success",
+				"data": customer,
 			})
 			return
 		}
 	}
 
 	c.JSON(http.StatusUnauthorized, gin.H{
+		"success": false,
 		"message": "Login Failed",
 	})
 }
 
 func Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
+		"success": true,
 		"message": "Logout Success",
 	})
-	services.LogActivity("Logout", "Logout Success.")
+	services.AddNewHistory("Logout", "Logout Success.")
 }

@@ -1,21 +1,23 @@
 package services
 
 import (
-	"encoding/json"
+	"errors"
 	"izzulhaqfs/mnc-tes-api/models"
-	"log"
-	"os"
+	"izzulhaqfs/mnc-tes-api/repositories"
 )
 
 func GetCustomers() models.Customers {
-	var customers models.Customers
+	return repositories.GetCustomers()
+}
 
-	jsonFile, err := os.ReadFile("data/customers.json")
-	if err != nil {
-		log.Fatalf("error when opening file: %v", err)
+func GetCustomerById(id int) (models.Customer, error) {
+	customer := repositories.GetCustomerById(id)
+	if (customer == models.Customer{}) {
+		return models.Customer{}, errors.New("customer not found")
 	}
-	
-	json.Unmarshal(jsonFile, &customers)
+	return customer, nil
+}
 
-	return customers
+func UpdateCustomer(customer models.Customer) models.Customer {
+	return repositories.UpdateCustomer(customer)
 }
