@@ -70,3 +70,12 @@ func CreateTransaction(c *gin.Context) {
 		"data": data,
 	})
 }
+
+func GetTransactions(c *gin.Context) {
+	transactions := services.GetTransactions()
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Get All Transactions Success",
+		"data": transactions,
+	})
+}

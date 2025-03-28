@@ -23,10 +23,11 @@ func main() {
 	protected.Use(middlewares.JwtAuthMiddleware())
 
 	protected.POST("/transaction", controllers.CreateTransaction)
-	// protected.GET("/transaction", controllers.GetTransactions)
+	protected.GET("/transaction", controllers.GetTransactions)
 
-	// protected.GET("/history", controllers.GetHistories)
+	protected.GET("/history", controllers.GetHistories)
 
+	protected.GET("/customer", controllers.GetCustomers)
 
 	router.Run(":8080")
 }
