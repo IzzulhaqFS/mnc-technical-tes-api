@@ -7,8 +7,8 @@ import (
 	"os"
 )
 
-func GetLogs() []models.LogActivity {
-	var logEntries []models.LogActivity
+func GetLogs() models.LogActivities {
+	var logEntries models.LogActivities
 
 	jsonFile, err := os.ReadFile("data/history.json")
 	if err != nil {
@@ -22,7 +22,7 @@ func GetLogs() []models.LogActivity {
 
 func LogActivity(action string, detail string) {
 	logEntries := GetLogs()
-	logEntries = append(logEntries, models.LogActivity{Action: action, Detail: detail})
+	logEntries.LogActivities = append(logEntries.LogActivities, models.LogActivity{Id: len(logEntries.LogActivities) + 1, Action: action, Detail: detail})
 	data, _ := json.Marshal(logEntries)
 	os.WriteFile("data/history.json", data, 0644)
 }

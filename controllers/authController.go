@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type ValidateInput struct {
+type ValidateInputAuth struct {
 	Email string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
@@ -29,7 +29,7 @@ func GetErrorMsg(fe validator.FieldError) string {
 }
 
 func Login(c *gin.Context) {
-	var input ValidateInput
+	var input ValidateInputAuth
 	if err := c.ShouldBindJSON(&input); err != nil {
 		var ve validator.ValidationErrors
 		if errors.As(err, &ve) {

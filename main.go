@@ -17,5 +17,9 @@ func main() {
 
 	router.POST("/login", controllers.Login)
 
+	router.POST("/logout", controllers.Logout)
+
+	router.POST("/transaction", controllers.CreateTransaction)
+
 	router.Run(":8080")
 }

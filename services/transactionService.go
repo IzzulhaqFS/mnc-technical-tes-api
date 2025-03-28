@@ -7,8 +7,8 @@ import (
 	"encoding/json"
 )
 
-func GetTransactions() []models.Transaction {
-	var transactions []models.Transaction
+func GetTransactions() models.Transactions {
+	var transactions models.Transactions
 
 	jsonFile, err := os.ReadFile("data/transactions.json")
 	if err != nil {
@@ -20,9 +20,13 @@ func GetTransactions() []models.Transaction {
 	return transactions
 }
 
-func AddNewTransaction(transaction models.Transaction) {
+func AddNewTransaction(transaction models.Transaction) models.Transaction {
 	transactions := GetTransactions()
-	transactions = append(transactions, transaction)
+
+	transaction.Id = len(transactions.Transactions) + 1
+
+	transactions.Transactions = append(transactions.Transactions, transaction)
 	data, _ := json.Marshal(transactions)
 	os.WriteFile("data/transactions.json", data, 0644)
+	return transaction
 }
